@@ -10,8 +10,8 @@ ADD https://github.com/bitly/oauth2_proxy/releases/download/v2.2/oauth2_proxy-2.
 RUN tar -xf /tmp/oauth2_proxy-2.2.0.linux-amd64.go1.8.1.tar.gz -C ./bin --strip-components=1 && rm /tmp/*.tar.gz
 
 # Get default config and create emails file
-ADD https://github.com/bitly/oauth2_proxy/blob/master/contrib/oauth2_proxy.cfg.example /etc/oauth2/oauth2_proxy.cfg
-CMD touch /etc/oauth2/emails.cfg
+ADD https://raw.githubusercontent.com/cheesemarathon/oAuth2-Proxy-Docker-Container/master/oauth2_proxy.cfg /etc/oauth2/
+CMD https://raw.githubusercontent.com/cheesemarathon/oAuth2-Proxy-Docker-Container/master/emails.cfg /etc/oauth2/
 
 # Install CA certificates
 RUN apt-get update -y && apt-get install -y ca-certificates
