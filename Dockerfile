@@ -10,7 +10,7 @@ ADD https://github.com/bitly/oauth2_proxy/releases/download/v2.2/oauth2_proxy-2.
 RUN tar -xf /tmp/oauth2_proxy-2.2.0.linux-amd64.go1.8.1.tar.gz -C ./bin --strip-components=1 && rm /tmp/*.tar.gz
 
 # Get startup script
-ADD https://raw.githubusercontent.com/cheesemarathon/oAuth2-Proxy-Docker-Container/master/startup.sh /
+ADD https://raw.githubusercontent.com/cheesemarathon/OAuth2-Proxy/master/startup.sh /
 RUN chmod +x /startup.sh
 
 # Install CA certificates
