@@ -20,4 +20,4 @@ else
     chmod 664 /etc/oauth2/emails.cfg
 fi
 
-./bin/oauth2_proxy -config=/etc/oauth2/oauth2_proxy.cfg
+exec /bin/oauth2_proxy -config=/etc/oauth2/oauth2_proxy.cfg
