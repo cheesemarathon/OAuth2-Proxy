@@ -6,8 +6,8 @@ ENV REFRESHED_AT 2018-03-01
 ENV OAUTH2_PROXY_VERSION 1
 
 # Checkout bitly's latest google-auth-proxy code from Github
-ADD https://github.com/bitly/oauth2_proxy/releases/download/v2.2/oauth2_proxy-2.2.0.linux-amd64.go1.8.1.tar.gz /tmp
-RUN tar -xf /tmp/oauth2_proxy-2.2.0.linux-amd64.go1.8.1.tar.gz -C ./bin --strip-components=1 && rm /tmp/*.tar.gz
+RUN curl -s -L https://github.com/bitly/oauth2_proxy/releases/latest | egrep -o '/bitly/oauth2_proxy/releases/download/v[0-9]\.[0-9]/oauth2_proxy-[0-9]\.[0-9]\.[0-9]\.linux-amd64.go[0-9]\.[0-9]\.[0-9]\.tar.gz' | wget --base=http://github.com/ -i - -O /tmp/oauth2_proxy.tar.gz
+RUN tar -xf /tmp/oauth2_proxy.tar.gz -C ./bin --strip-components=1 && rm /tmp/*.tar.gz
 
 # Get startup script
 ADD https://raw.githubusercontent.com/cheesemarathon/OAuth2-Proxy/master/startup.sh /
