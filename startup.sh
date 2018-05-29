@@ -16,7 +16,7 @@ then
 	echo "$file found."
 else
 	echo "$file not found."
-    wget https://raw.githubusercontent.com/cheesemarathon/OAuth2-Proxy/master/emails.cfg -P /etc/oauth2/
+    wget https://gitlab.squishedmooo.com/cheesemarathon/OAuth2-Proxy/raw/master/startup.sh -P /etc/oauth2/
     chmod 664 /etc/oauth2/emails.cfg
 fi
 
