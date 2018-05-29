@@ -1,4 +1,4 @@
-oauth2_proxy
+OAuth2_Proxy
 =================
 
 ![Docker Build Status](https://img.shields.io/docker/build/cheesemarathon/oauth2-proxy.svg)
