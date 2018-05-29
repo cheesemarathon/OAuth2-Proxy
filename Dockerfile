@@ -6,6 +6,7 @@ ENV REFRESHED_AT 2018-03-01
 ENV OAUTH2_PROXY_VERSION 1
 
 # Checkout bitly's latest google-auth-proxy code from Github
+RUN apt get install curl wget
 RUN curl -s -L https://github.com/bitly/oauth2_proxy/releases/latest | egrep -o '/bitly/oauth2_proxy/releases/download/v[0-9]\.[0-9]/oauth2_proxy-[0-9]\.[0-9]\.[0-9]\.linux-amd64.go[0-9]\.[0-9]\.[0-9]\.tar.gz' | wget --base=http://github.com/ -i - -O /tmp/oauth2_proxy.tar.gz
 RUN tar -xf /tmp/oauth2_proxy.tar.gz -C ./bin --strip-components=1 && rm /tmp/*.tar.gz
 
