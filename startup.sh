@@ -40,4 +40,6 @@ else
     chmod 664 /etc/oauth2/templates/error.html
 fi
 
+echo "Setup Complete! Starting OAuth2 Proxy"
+
 exec /bin/oauth2_proxy -config=/etc/oauth2/oauth2_proxy.cfg
