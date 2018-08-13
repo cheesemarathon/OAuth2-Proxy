@@ -1,7 +1,7 @@
 stages:
   - build
   - test
-  - deploy
+  #- deploy
   - notify
 
 image: docker:stable-git
