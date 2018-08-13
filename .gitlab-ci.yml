@@ -36,8 +36,8 @@ build:
   stage: build
   script:
   - docker login registry.gitlab.squishedmooo.com -u cheesemarathon -p $PERSONAL_ACCESS_TOKEN
-  - docker build -t registry.gitlab.squishedmooo.com/cheesemarathon/OAuth2-Proxy .
-  - docker push registry.gitlab.squishedmooo.com/cheesemarathon/OAuth2-Proxy
+  - docker build -t registry.gitlab.squishedmooo.com/cheesemarathon/oauth2-proxy .
+  - docker push registry.gitlab.squishedmooo.com/cheesemarathon/oauth2-proxy
   
 test:
   tags:
@@ -47,8 +47,8 @@ test:
   stage: test
   script:
   - docker login registry.gitlab.squishedmooo.com -u cheesemarathon -p $PERSONAL_ACCESS_TOKEN
-  - docker pull registry.gitlab.squishedmooo.com/cheesemarathon/OAuth2-Proxy
-  - docker run -d --name "OAuth2Proxy" -p '4180:4180/tcp -v '/mnt/OAuth2Proxy/config/':'/etc/oauth2/':'rw' registry.gitlab.squishedmooo.com/cheesemarathon/OAuth2-Proxy
+  - docker pull registry.gitlab.squishedmooo.com/cheesemarathon/oauth2-proxy
+  - docker run -d --name "OAuth2Proxy" -p '4180:4180/tcp -v '/mnt/OAuth2Proxy/config/':'/etc/oauth2/':'rw' registry.gitlab.squishedmooo.com/cheesemarathon/oauth2-proxy
   - sleep 10
   - docker logs OAuth2Proxy
   - docker kill OAuth2Proxy
@@ -62,8 +62,8 @@ deploy:
     stage: deploy
     script:
     - docker login registry.gitlab.squishedmooo.com -u cheesemarathon -p $PERSONAL_ACCESS_TOKEN
-    - docker pull registry.gitlab.squishedmooo.com/cheesemarathon/OAuth2-Proxy
-    - docker image tag registry.gitlab.squishedmooo.com/cheesemarathon/OAuth2-Proxy cheesemarathon/oauth2-proxy
+    - docker pull registry.gitlab.squishedmooo.com/cheesemarathon/oauth2-proxy
+    - docker image tag registry.gitlab.squishedmooo.com/cheesemarathon/oauth2-proxy cheesemarathon/oauth2-proxy
     - docker login -u cheesemarathon -p $DockerHub_PW
     - docker push cheesemarathon/oauth2-proxy
 
