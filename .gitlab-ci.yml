@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - deploy
   - notify
 
 image: docker:stable-git
@@ -50,21 +51,20 @@ test:
   - docker run -d --name "OAuth2Proxy" -p '4180:4180/tcp' -v '/mnt/OAuth2Proxy/config/':'/etc/oauth2/':'rw' registry.gitlab.squishedmooo.com/cheesemarathon/oauth2-proxy
   - sleep 10
   - docker logs OAuth2Proxy
-  - docker kill OAuth2Proxy
   - docker rm OAuth2Proxy
 
-#deploy:
-    #tags:
-    #- Docker
-    #- x86
+deploy:
+    tags:
+    - Docker
+    - x86
     
-    #stage: deploy
-    #script:
-    #- docker login registry.gitlab.squishedmooo.com -u cheesemarathon -p $PERSONAL_ACCESS_TOKEN
-    #- docker pull registry.gitlab.squishedmooo.com/cheesemarathon/oauth2-proxy
-    #- docker image tag registry.gitlab.squishedmooo.com/cheesemarathon/oauth2-proxy cheesemarathon/oauth2-proxy
-    #- docker login -u cheesemarathon -p $DockerHub_PW
-    #- docker push cheesemarathon/oauth2-proxy
+    stage: deploy
+    script:
+    - docker login registry.gitlab.squishedmooo.com -u cheesemarathon -p $PERSONAL_ACCESS_TOKEN
+    - docker pull registry.gitlab.squishedmooo.com/cheesemarathon/oauth2-proxy
+    - docker image tag registry.gitlab.squishedmooo.com/cheesemarathon/oauth2-proxy cheesemarathon/oauth2-proxy
+    - docker login -u cheesemarathon -p $DockerHub_PW
+    - docker push cheesemarathon/oauth2-proxy
 
   
 notify_success:
