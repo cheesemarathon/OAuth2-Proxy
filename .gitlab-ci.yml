@@ -1,0 +1,98 @@
+stages:
+  - build
+  - test
+  - deploy
+  - notify
+
+image: docker:stable-git
+
+variables:
+  # When using dind service we need to instruct docker, to talk with the
+  # daemon started inside of the service. The daemon is available with
+  # a network connection instead of the default /var/run/docker.sock socket.
+  #
+  # The 'docker' hostname is the alias of the service container as described at
+  # https://docs.gitlab.com/ee/ci/docker/using_docker_images.html#accessing-the-services
+  #
+  # Note that if you're using Kubernetes executor, the variable should be set to
+  # tcp://localhost:2375 because of how Kubernetes executor connects services
+  # to the job container
+  DOCKER_HOST: tcp://docker:2375/
+  # When using dind, it's wise to use the overlayfs driver for
+  # improved performance.
+  DOCKER_DRIVER: overlay2
+  
+services:
+- docker:dind
+
+before_script:
+  - docker info
+
+build:
+  tags:
+  - Docker
+  - x86
+
+  stage: build
+  script:
+  - docker login registry.gitlab.squishedmooo.com -u cheesemarathon -p $PERSONAL_ACCESS_TOKEN
+  - docker build -t registry.gitlab.squishedmooo.com/cheesemarathon/OAuth2-Proxy .
+  - docker push registry.gitlab.squishedmooo.com/cheesemarathon/OAuth2-Proxy
+  
+test:
+  tags:
+  - Docker
+  - x86
+  
+  stage: test
+  script:
+  - docker login registry.gitlab.squishedmooo.com -u cheesemarathon -p $PERSONAL_ACCESS_TOKEN
+  - docker pull registry.gitlab.squishedmooo.com/cheesemarathon/OAuth2-Proxy
+  - docker run -d --name "OAuth2Proxy" -p '4180:4180/tcp -v '/mnt/OAuth2Proxy/config/':'/etc/oauth2/':'rw' registry.gitlab.squishedmooo.com/cheesemarathon/OAuth2-Proxy
+  - sleep 10
+  - docker logs OAuth2Proxy
+  - docker kill OAuth2Proxy
+  - docker rm OAuth2Proxy
+
+deploy:
+    tags:
+    - Docker
+    - x86
+    
+    stage: deploy
+    script:
+    - docker login registry.gitlab.squishedmooo.com -u cheesemarathon -p $PERSONAL_ACCESS_TOKEN
+    - docker pull registry.gitlab.squishedmooo.com/cheesemarathon/OAuth2-Proxy
+    - docker image tag registry.gitlab.squishedmooo.com/cheesemarathon/OAuth2-Proxy cheesemarathon/oauth2-proxy
+    - docker login -u cheesemarathon -p $DockerHub_PW
+    - docker push cheesemarathon/oauth2-proxy
+
+  
+notify_success:
+  tags:
+    - Docker
+    - x86
+
+  stage: notify
+  allow_failure: true
+  only:
+    - master
+  before_script:
+    - apk update && apk add curl
+  script:
+    - curl -s --form-string "token=$PUSHOVER_API_TOKEN" --form-string "user=$PUSHOVER_USER_TOKEN" --form-string "message=OAuth2 Proxy image built successfully!" https://api.pushover.net/1/messages.json
+
+notify_fail:
+  tags:
+    - Docker
+    - x86
+
+  stage: notify
+  allow_failure: true
+  only:
+    - master
+  when: on_failure
+  before_script:
+    - apk update && apk add curl
+  script:
+    - curl -s --form-string "token=$PUSHOVER_API_TOKEN" --form-string "user=$PUSHOVER_USER_TOKEN" --form-string "message=OAuth2 Proxy build failed. Please check for errors" https://api.pushover.net/1/messages.json
