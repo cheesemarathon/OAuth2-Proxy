@@ -20,4 +20,4 @@ RUN apk add --no-cache ca-certificates
 # Expose the ports we need and setup the ENTRYPOINT w/ the default argument
 # to be pass in.
 EXPOSE 8080 4180
-ENTRYPOINT [ "/startup.sh" ]
+ENTRYPOINT sh ./startup.sh
