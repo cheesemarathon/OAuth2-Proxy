@@ -1,0 +1,5 @@
+services:
+  - docker
+
+script:
+  - docker build -t cheesemarathon/oa2proxy .
